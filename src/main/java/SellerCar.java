@@ -6,25 +6,27 @@ public class SellerCar {
     public SellerCar(AutoShop autoShop) {
         this.autoShop = autoShop;
     }
+
     Random random = new Random();
     int time1 = random.nextInt(2000);
     int time2 = random.nextInt(1000);
 
     public void receiveCar() {
         for (int i = 0; i < 3; i++) {
-            synchronized (this) {
-                try {
-                    System.out.println(Thread.currentThread().getName() + " закручивает последние гайки");
-                    Thread.sleep(time1);
+            try {
+//                System.out.println(Thread.currentThread().getName() + " закручивает последние гайки");
+                Thread.sleep(time1);
+                synchronized (this) {
                     autoShop.getCars().add(new Car());
                     System.out.println(Thread.currentThread().getName() + " выпустил  авто");
                     notify();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
+
     public synchronized Car sellCar() {
         try {
             System.out.println(Thread.currentThread().getName() + " зашел в автосалон");
@@ -34,7 +36,7 @@ public class SellerCar {
             }
             Thread.sleep(time2);
             System.out.println("Всего машин в салоне: " + autoShop.getCars().size());
-            System.out.println(Thread.currentThread().getName() + " уехал на новеньком авто");
+            System.out.println(Thread.currentThread().getName() + " уехал на новеньком авто\n");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
